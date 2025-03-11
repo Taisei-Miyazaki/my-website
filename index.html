@@ -3,168 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DX基盤PoCサイト</title>
-        <script type="text/javascript" src="brython\brython.js"></script>
-        <!-- <script type="module" src="https://pyscript.net/releases/2024.10.1/core.js"></script> -->
-        <!-- <script src="https://cdn.jsdelivr.net/npm/brython@3/brython.min.js"></script> -->
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>開閉式メニューバーのWebページ</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #2c3e50;
-            color: white;
+            height: 100vh;
+            transition: margin-left 0.3s ease;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
         }
 
         header {
-            background: linear-gradient(45deg, #3498db, #8e44ad);
-            padding: 20px 0;
+            background-color: #007BFF;
+            color: white;
+            padding: 20px 10px;
             text-align: center;
         }
 
-        header h1 {
-            font-size: 3em;
-            margin: 0;
+        /* 左側のメニューバー */
+        .sidebar {
+            width: 0;
+            height: 100%;
+            background-color: #2c3e50; /* 落ち着いた青灰色 */
+            color: white;
+            position: fixed;
+            transition: width 0.3s ease;
+            padding-top: 20px;
+            overflow-x: hidden;
+        }
+
+        .sidebar a {
+            padding: 15px;
+            text-decoration: none;
+            color: white;
+            font-size: 1.2rem;
             text-transform: uppercase;
-            letter-spacing: 5px;
+            display: block;
+            transition: background-color 0.3s;
         }
 
-        section {
-            padding: 50px 20px;
+        .sidebar a:hover {
+            background-color: #34495e; /* メニュー項目のホバー時 */
+        }
+
+        .sidebar .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* メインコンテンツ */
+        .main-content {
+            margin-left: 0;
+            padding: 40px;
+            width: 100%;
+            height: 100%;
+            transition: margin-left 0.3s ease;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #2c3e50; /* 見出しの色 */
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #555; /* 少し薄い色のテキスト */
+            line-height: 1.6;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #0056b3;
+            padding: 10px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.1em;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        main {
+            padding: 20px;
             text-align: center;
         }
-
-        .card {
-            background-color: #34495e;
-            margin: 20px;
-            padding: 30px;
-            border-radius: 10px;
-            transition: transform 0.3s ease;
+        section {
+            margin: 20px 0;
         }
 
-        .card:hover {
-            transform: translateY(-10px);
+        .product {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 20px auto;
+            width: 80%;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        .product h2 {
+            color: #007bff;
         }
 
-        .card h2 {
-            font-size: 2em;
+        /* ボタン */
+        .btn {
+            padding: 12px 25px;
+            background-color: #2980b9;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
-        .card p {
-            font-size: 1.2em;
+        .btn:hover {
+            background-color: #3498db;
+            transform: scale(1.05);
+        }
+
+        /* ハンバーガーメニューアイコン */
+        .menu-icon {
+            font-size: 30px;
+            cursor: pointer;
+            color: #2c3e50;
+            position: absolute;
+            top: 20px;
+            left: 20px;
         }
 
         footer {
-            background-color: #2c3e50;
-            text-align: center;
-            padding: 20px;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-        }
-
-        footer p {
-            margin: 0;
-        }
-
-        .button {
-            background-color: #3498db;
+            background-color: #333;
             color: white;
-            padding: 15px 25px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 1.2em;
-            transition: background-color 0.3s ease;
+            text-align: center;
+            padding: 10px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
         }
 
-        .button:hover {
-            background-color: #2980b9;
-        }
-        
-        iframe {
-  			display: block;
-  			width: 100%;
-  			height: 100vh;
-  			border: none; 
-  		}
+        /* メディアクエリ：小さい画面用 */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+            }
 
-        .container {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-icon {
+                display: block;
+            }
+
+            nav {
+                flex-direction: column;
+            }
         }
+
     </style>
 </head>
 <body>
+    <!-- ハンバーガーメニューアイコン -->
+    <span class="menu-icon" onclick="toggleMenu()">☰</span>
 
-    <header>
-        <h1>DX基盤PoCサイト</h1>
-    </header>
-
-    <section>
-        <div class="container">
-            <div class="card" id="navigate_button1">
-                <h2>管理項目トレンドグラフ</h2>
-                <p>管理項目毎のトレンドグラフを表示する</p>
-            </div>
-            <div class="card" id="navigate_button2">
-                <h2>管理項目トレンドグラフ</h2>
-                <p>管理項目毎のトレンドグラフを表示する</p>
-            </div>
-            <div class="card" id="navigate_button3">
-                <h2>API呼び出し</h2>
-                <p>StepFunctionのAPIを実行する</p>
-            </div>
-        </div>
-    </section>
+    <!-- 左側のメニューバー -->
+    <div class="sidebar">
+        <a href="#" class="menu-item">🏠ホーム</a>
+        <a href="#" class="menu-item">📄ドキュメント</a>
+        <a href="#" class="menu-item">📞お問い合わせ</a>
+        <a href="#" class="menu-item">⚙️設定</a>
+        <span class="close-btn" onclick="toggleMenu()">×</span>
+    </div>
     
-    <section>
-        <h1>試験記録トレンドグラフ</h1>
-        <p>品名毎の試験記録トレンドグラフを表示する</p>
-        <iframe
-            src="https://ap-northeast-1.quicksight.aws.amazon.com/sn/embed/share/accounts/396913714040/dashboards/114ab3e7-00e1-4a91-9701-3b222c616011?directory_alias=iyaku1/index.html">
-        </iframe>
-    </section>
-
+    <!-- メインコンテンツ -->
+    <header>
+        <h1>TaiseiのWebSite</h1>
+    </header>
+    <nav>
+        <a href="#Products">Products</a>
+    </nav>
+    <main>
+        <section id="Products">
+            <h2>My Products</h2>
+            <div class="product">
+                <h2>自動クリックExcel</h2>
+                <p>この製品は、あなたのリモートワークをより便利にするための画期的なアイテムです。</p>
+                <a href="https://taisei-miyazaki.github.io/my-website/Test.xlsx" download><button class="btn">Download</button></a>
+            </div>
+        </section>
+    </main>
     <footer>
-        <p>&copy; 日立産業制御ソリューションズ</p>
+        <p>&copy; Created by Taisei in 2025.</p>
     </footer>
 
     <script>
-        // div要素を取得
-        const divElement1 = document.getElementById("navigate_button1");
-        const divElement3 = document.getElementById("navigate_button3");
-
-        // クリックイベントを追加
-        divElement1.addEventListener("click", function() {
-          // 新しいURLを開く（新しいタブで）
-          window.open("https://d6zz7pgf092c1.cloudfront.net/index1.html");
-        });
-
-        async function callApiGateway() {
-        const apiEndpoint = 'https://a0nrpwqctg.execute-api.ap-northeast-1.amazonaws.com'; // ここにAPI GatewayのエンドポイントURLを入力してください
-
-        try {
-            const response = await fetch(apiEndpoint, {
-            method: 'GET', // 'POST' やその他のHTTPメソッドも利用可能
-            headers: {
-                'Content-Type': 'application/json',
-                // 必要に応じて認証トークンやその他のヘッダーを追加
-            },
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
+        function toggleMenu() {
+            var sidebar = document.querySelector('.sidebar');
+            var mainContent = document.querySelector('.main-content');
+            if (sidebar.style.width === '250px') {
+                sidebar.style.width = '0';
+                mainContent.style.marginLeft = '0';
+            } else {
+                sidebar.style.width = '250px';
+                mainContent.style.marginLeft = '250px';
             }
-
-            const data = await response.json();
-            console.log(data);
-        } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
-      }
-    
-        divElement3.addEventListener("click", callApiGateway());
-
+        }
     </script>
 </body>
 </html>
