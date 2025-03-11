@@ -4,8 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>TaiseiのWebページ</title>
+    <title>Taisei's WebSite</title>
     <style>
+        header {
+            background-color: #007BFF;
+            color: white;
+            padding: 20px 10px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .dog1 {
+            position: absolute;
+            top: 9%;
+            left: -400px; /* 初期位置 */
+            transform: translateY(-50%);
+            width: 100px; /* 犬の画像のサイズに合わせて調整 */
+            height: auto;
+            /*background-image: url('C:\Users\taise\OneDrive\デスクトップ\S__3555569.png');*/ /* ここに犬の画像URLを入力 */
+            animation: runDog1 20s linear infinite; /* 犬の走るアニメーション */
+            animation-delay: 3s;
+        }
+
+        .dog2 {
+            position: absolute;
+            top: 8.5%;
+            left: -400px; /* 初期位置 */
+            transform: translateY(-50%);
+            width: 100px; /* 犬の画像のサイズに合わせて調整 */
+            height: auto;
+            /*background-image: url('C:\Users\taise\OneDrive\デスクトップ\S__3555569.png');*/ /* ここに犬の画像URLを入力 */
+            animation: runDog2 20s linear infinite; /* 犬の走るアニメーション */
+            animation-delay: 0s;
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -17,13 +49,6 @@
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
             color: #333;
-        }
-
-        header {
-            background-color: #007BFF;
-            color: white;
-            padding: 20px 10px;
-            text-align: center;
         }
 
         /* 左側のメニューバー */
@@ -180,8 +205,30 @@
             width: 100%;
         }
 
+        /* 犬が走るアニメーション */
+        @keyframes runDog1 {
+            0% {
+                left: -400px;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        @keyframes runDog2 {
+            0% {
+                left: -400px;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
         /* メディアクエリ：小さい画面用 */
         @media (max-width: 768px) {
+
             .sidebar {
                 width: 0;
             }
@@ -202,6 +249,14 @@
     </style>
 </head>
 <body>
+    <!-- メインコンテンツ -->
+    <header>
+        <h1>Taisei's WebSite</h1>
+        <!-- 犬の画像 -->
+        <img src="cheddarchan.png" class="dog1" alt="cheddar chan" />
+        <img src="princhan.png" class="dog2" alt="prin chan" />
+    </header>
+
     <!-- ハンバーガーメニューアイコン -->
     <span class="menu-icon" onclick="toggleMenu()">☰</span>
 
@@ -213,11 +268,6 @@
         <a href="#" class="menu-item">⚙️設定</a>
         <span class="close-btn" onclick="toggleMenu()">×</span>
     </div>
-
-    <!-- メインコンテンツ -->
-    <header>
-        <h1>TaiseiのWebSite</h1>
-    </header>
 
     <div class="tab-container">
         <div class="tab active" onclick="openTab('My Products')">My Products</div>
@@ -232,7 +282,7 @@
                     <div class="product">
                         <h2>自動クリックExcel</h2>
                         <p>この製品は、あなたのリモートワークをより便利にするための画期的なアイテムです。</p>
-                        <button class="btn" onclick="location.href='/Test.xlsx'">Download</button>
+                        <button class="btn" onclick="location.href='https://taisei-miyazaki.github.io/my-website/Test.xlsx'">Download</button>
                     </div>
                     <div class="product">
                         <h2>Preparing...</h2>
