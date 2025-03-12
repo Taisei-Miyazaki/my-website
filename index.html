@@ -4,14 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Taisei's WebSite</title>
+    <title>Taisei's Web Site</title>
     <style>
+        /* 初期の中央に表示されるメッセージ */
+        .welcome-message {
+            position: absolute;
+            display: flex;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+            opacity: 1;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%); /* 要素の中心を原点に移動 */
+            justify-content: center;
+            align-items: center;
+            animation: moveToHeader 3s ease-out forwards; /* 3秒間でアニメーション */
+        }
+
         header {
             background-color: #007BFF;
             color: white;
             padding: 20px 10px;
             text-align: center;
             position: relative;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        /* ヘッダーが現れる */
+        .header-visible {
+            opacity: 1;
         }
 
         .dog1 {
@@ -205,6 +228,22 @@
             width: 100%;
         }
 
+        /* アニメーションの定義 */
+        @keyframes moveToHeader {
+            0% {
+                opacity: 1;
+                transform: translateY(0); /* 中央に表示された状態 */
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-30px); /* 少し上に移動する */
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px); /* 完全に上に移動して透明 */
+            }
+        }
+
         /* 犬が走るアニメーション */
         @keyframes runDog1 {
             0% {
@@ -249,9 +288,14 @@
     </style>
 </head>
 <body>
-    <!-- メインコンテンツ -->
-    <header>
-        <h1>Taisei's WebSite</h1>
+
+    <div class="welcome-message">
+        Welcome to Taisei's Web Site！
+    </div>
+
+    <!-- ヘッダー -->
+    <header id="header">
+        <h1>Taisei's Web Site</h1>
         <!-- 犬の画像 -->
         <img src="cheddarchan.png" class="dog1" alt="cheddar chan" />
         <img src="princhan.png" class="dog2" alt="prin chan" />
@@ -269,6 +313,7 @@
         <span class="close-btn" onclick="toggleMenu()">×</span>
     </div>
 
+    <!-- メインコンテンツ -->
     <div class="tab-container">
         <div class="tab active" onclick="openTab('My Products')">My Products</div>
         <div class="tab" onclick="openTab('tab2')">Tab 2</div>
@@ -304,6 +349,14 @@
     </footer>
 
     <script>
+        // ページ読み込み後にヘッダーが表示されるようにします
+        window.onload = () => {
+            setTimeout(() => {
+            document.getElementById('header').classList.add('header-visible');
+            }, 3000); // 3秒後にヘッダーを表示
+        }
+
+        // メニューバーのトグル
         function toggleMenu() {
             var sidebar = document.querySelector('.sidebar');
             var mainContent = document.querySelector('.main-content');
