@@ -14,9 +14,9 @@
             font-weight: bold;
             color: #333;
             opacity: 1;
+            transform: translate(-50%, -50%); /* 要素の中心を原点に移動 */
             left: 50%;
             top: 50%;
-            transform: translate(-50%, -50%); /* 要素の中心を原点に移動 */
             justify-content: center;
             align-items: center;
             animation: moveToHeader 3s ease-out forwards; /* 3秒間でアニメーション */
@@ -307,7 +307,7 @@
     <!-- 左側のメニューバー -->
     <div class="sidebar">
         <a href="#" class="menu-item">🏠ホーム</a>
-        <a href="#" class="menu-item">📄ドキュメント</a>
+        <!-- <a href="#" class="menu-item">📄ドキュメント</a> -->
         <a href="#" class="menu-item">📞お問い合わせ</a>
         <a href="#" class="menu-item">⚙️設定</a>
         <span class="close-btn" onclick="toggleMenu()">×</span>
