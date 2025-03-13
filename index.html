@@ -368,8 +368,8 @@
     <footer>
         <p>&copy; Created by Taisei in 2025.</p>
     </footer>
-    <audio id="myAudio" src="CHIHUAHUA.mp3" preload="auto" muted></audio>
-    
+    <audio id="cheddarchan-song" src="CHIHUAHUA.mp3" preload="auto" muted></audio>
+    <audio id="princhan-song" src="CHIHUAHUA.mp3" preload="auto" muted></audio>
     <script>
         // ページ読み込み後にヘッダーが表示される
         window.onload = () => {
@@ -403,13 +403,28 @@
             document.getElementById(tabId).classList.add('active');
         }
 
-        // 音楽再生処理
+        // 音楽再生処理1
         document.getElementById("cheddarchan").addEventListener("click", function() {
             var audio = document.getElementById("myAudio");
             audio.muted = false;  // ミュート解除
             audio.play().catch(function(error) {
                 console.error('音楽の再生に失敗しました:', error);
             });
+            // 25秒後に音楽を停止
+            setTimeout(function() {
+                audio.pause();  // 音楽を停止
+                audio.currentTime = 0;  // 音楽を最初に戻す（オプション）
+            }, 25000);  // 25秒（25000ミリ秒）後に停止
+        });
+
+        // 音楽再生処理2
+        document.getElementById("princhan").addEventListener("click", function() {
+            var audio = document.getElementById("princhan-song");
+            audio.muted = false;  // ミュート解除
+            audio.play().catch(function(error) {
+                console.error('音楽の再生に失敗しました:', error);
+            });
+
             // 25秒後に音楽を停止
             setTimeout(function() {
                 audio.pause();  // 音楽を停止
