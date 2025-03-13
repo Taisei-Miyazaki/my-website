@@ -402,6 +402,12 @@
             audio.play().catch(function(error) {
                 console.error('音楽の再生に失敗しました:', error);
             });
+            // 25秒後に音楽を停止
+            setTimeout(function() {
+                audio.pause();  // 音楽を停止
+                audio.currentTime = 0;  // 音楽を最初に戻す（オプション）
+            }, 25000);  // 25秒（25000ミリ秒）後に停止
+        });
         });
     </script>
 </body>
