@@ -10,7 +10,7 @@
         body {
             margin: 0;
             padding: 0;
-            height: 100vh;
+            /* height: 100vh; */
             min-height: 100vh; /* ビューポート全体の高さを確保 */
             display: flex;
             flex-direction: column;
@@ -415,7 +415,6 @@
                 audio.pause();  // 音楽を停止
                 audio.currentTime = 0;  // 音楽を最初に戻す（オプション）
             }, 25000);  // 25秒（25000ミリ秒）後に停止
-        });
         });
     </script>
 </body>
