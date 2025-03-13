@@ -308,7 +308,7 @@
     <header id="header">
         <h1>Taisei's Web Site</h1>
         <!-- 犬の画像 -->
-        <img src="cheddarchan.png" class="dog1" alt="cheddar chan" />
+        <img src="cheddarchan.png" class="dog1" id="cheddarchan" alt="cheddar chan" />
         <img src="princhan.png" class="dog2" alt="prin chan" />
     </header>
 
@@ -360,7 +360,8 @@
     <footer>
         <p>&copy; Created by Taisei in 2025.</p>
     </footer>
-
+    <audio id="myAudio" src="CHIHUAHUA.mp3" preload="auto" muted></audio>
+    
     <script>
         // ページ読み込み後にヘッダーが表示される
         window.onload = () => {
@@ -393,6 +394,15 @@
             document.querySelector(`[onclick="openTab('${tabId}')"]`).classList.add('active');
             document.getElementById(tabId).classList.add('active');
         }
+
+        // 音楽再生処理
+        document.getElementById("cheddarchan").addEventListener("click", function() {
+            var audio = document.getElementById("myAudio");
+            audio.muted = false;  // ミュート解除
+            audio.play().catch(function(error) {
+                console.error('音楽の再生に失敗しました:', error);
+            });
+        });
     </script>
 </body>
 </html> 
