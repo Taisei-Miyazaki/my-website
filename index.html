@@ -107,7 +107,7 @@
             position: absolute;
             top: 20px;
             right: 25px;
-            font-size: 1rem;
+            font-size: 2.5rem;
             color: white;
             cursor: pointer;
         }
@@ -192,6 +192,10 @@
         }
         .product h2 {
             color: #007bff;
+            font-size: 1.5rem;
+        }
+        .product p {
+            font-size: 1rem;
         }
 
         /* ボタン */
@@ -241,8 +245,12 @@
                 opacity: 1;
                 transform: translateY(-30px); /* 少し上に移動する */
             }
+            99%{
+                height: 100vh;
+            }
             100% {
                 opacity: 0;
+                height: 0;
                 transform: translateY(-100px); /* 完全に上に移動して透明 */
             }
         }
