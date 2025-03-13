@@ -369,7 +369,7 @@
         <p>&copy; Created by Taisei in 2025.</p>
     </footer>
     <audio id="cheddarchan-song" src="CHIHUAHUA.mp3" preload="auto" muted></audio>
-    <audio id="princhan-song" src="CHIHUAHUA.mp3" preload="auto" muted></audio>
+    <audio id="princhan-song" src="It's Raining Tacos.mp3" preload="auto" muted></audio>
     <script>
         // ページ読み込み後にヘッダーが表示される
         window.onload = () => {
@@ -405,7 +405,7 @@
 
         // 音楽再生処理1
         document.getElementById("cheddarchan").addEventListener("click", function() {
-            var audio = document.getElementById("myAudio");
+            var audio = document.getElementById("cheddarchan-song");
             audio.muted = false;  // ミュート解除
             audio.play().catch(function(error) {
                 console.error('音楽の再生に失敗しました:', error);
