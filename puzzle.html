@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>写真のスライドパズル</title>
+  <style>
+    .puzzle {
+      display: grid;
+      grid-template-columns: repeat(4, 100px);
+      grid-gap: 2px;
+    }
+    .tile {
+      width: 100px;
+      height: 100px;
+      background-size: 400px 400px;
+      cursor: pointer;
+    }
+    .empty {
+      background: white;
+      cursor: default;
+    }
+  </style>
+</head>
+<body>
+  <h1>写真のスライドパズル</h1>
+  <div class="puzzle" id="puzzle"></div>
+
+  <script>
+    const imageUrl = "cheddarchanpazzle.jpg"; // 画像のURLをここに設定してください
+    const puzzle = document.getElementById("puzzle");
+    const tiles = [...Array(15).keys()].map(n => n + 1); // 1〜15の数字
+    tiles.push(""); // 空白タイル
+
+    // シャッフル関数
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    // タイルをシャッフル
+    shuffle(tiles);
+
+    tiles.forEach((num, i) => {
+      const tile = document.createElement("div");
+      tile.className = "tile";
+      if (num === "") {
+        tile.classList.add("empty");
+      } else {
+        tile.style.backgroundImage = `url(${imageUrl})`;
+        // 各タイルに画像の位置を設定
+        const col = (num - 1) % 4;
+        const row = Math.floor((num - 1) / 4);
+        tile.style.backgroundPosition = `-${col * 100}px -${row * 100}px`;
+      }
+      puzzle.appendChild(tile);
+    });
+
+    // 完成チェック関数
+    function checkCompletion() {
+      const currentOrder = [...puzzle.children].map(tile =>
+        tile.classList.contains("empty") ? "" : tile.style.backgroundPosition
+      );
+      
+      const correctOrder = tiles.map((num, i) => {
+        if (num === "") return "";
+        const col = (num - 1) % 4;
+        const row = Math.floor((num - 1) / 4);
+        return `-${col * 100}px -${row * 100}px`;
+      });
+
+      return currentOrder.every((pos, i) => pos === correctOrder[i]);
+    }
+
+    // タイルのクリック処理
+    puzzle.addEventListener("click", (e) => {
+      const emptyTile = document.querySelector(".empty");
+      const clickedTile = e.target;
+      const emptyIndex = [...puzzle.children].indexOf(emptyTile);
+      const clickedIndex = [...puzzle.children].indexOf(clickedTile);
+
+      // 移動可能な位置を計算
+      const possibleMoves = [
+        emptyIndex - 1, emptyIndex + 1,
+        emptyIndex - 4, emptyIndex + 4
+      ];
+      if (possibleMoves.includes(clickedIndex)) {
+        // タイルを入れ替え
+        emptyTile.style.backgroundImage = clickedTile.style.backgroundImage;
+        emptyTile.style.backgroundPosition = clickedTile.style.backgroundPosition;
+        emptyTile.classList.remove("empty");
+        clickedTile.style.backgroundImage = "";
+        clickedTile.classList.add("empty");
+
+        // パズル完成チェック
+        if (checkCompletion()) {
+          message.textContent = "おめでとう！パズルが完成しました！🎉";
+        }
+      }
+    });
+  </script>
+</body>
+</html>
