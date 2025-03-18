@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>写真のスライドパズル</title>
   <style>
-    #puzzle-container {
+  #puzzle-container {
     width: 400px; /* パズル全体の幅 */
     height: 300px; /* パズル全体の高さ */
     display: grid;
@@ -26,12 +26,63 @@
     border: none;
   }
 
+  /* 動画のスタイル */
+  #video-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(255, 253, 253); 
+    display: none; /* 初期状態では非表示 */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* 最前面に表示 */
+    opacity: 0; /* 初期状態では完全に透明 */
+    animation: fadeIn 6s forwards; /* フェードインアニメーションを適用 */
+  }
+
+  /* フェードインのアニメーション */
+  @keyframes fadeIn {
+      from {
+          opacity: 0;
+      }
+      to {
+          opacity: 1;
+      }
+  }
+
+  /* フェードアウトのアニメーション */
+  @keyframes fadeOut {
+      from {
+          opacity: 1;
+      }
+      to {
+          opacity: 0;
+      }
+  }
+
+  video {
+      width: 80%;  /* 動画の横幅を80%に設定 */
+      max-width: 1200px; /* 最大横幅を1200pxに制限 */
+      border-radius: 10px; /* 角を丸くする */
+  }
+
   </style>
 </head>
 <body>
   <h1>写真のスライドパズル</h1>
   <div id="puzzle-container"></div>
-
+    <div id="video-overlay">
+      <video id="overlay-video" autoplay>
+        <source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4">
+        お使いのブラウザは動画をサポートしていません。
+      </video>
+  </div>
+  <audio id="click-sound" src="click_sound.mp3" preload="auto"></audio>
+  <footer>
+    <p>&copy; Created by Taisei in 2025.</p>
+  </footer>
   <script>
     const imageSrc = 'cheddarchanpazzle.jpg'; // 使用する画像のパス
     const gridSize = 4; // 3x3パズル
@@ -99,17 +150,48 @@
         [tiles[clickedIndex], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[clickedIndex]];
         tiles.forEach(tile => puzzleContainer.appendChild(tile));
       }
-      if (isSolved()) {
-          alert("おめでとう！パズルが完成しました！🎉");
-        }
+      if (IsSolved()) {
+        Congratulate();
+      }
+      var audio = document.getElementById("click-sound");
+            audio.play().catch(function(error) {
+                alert('音楽の再生に失敗しました:', error);
+            });
     });
 
-    function isSolved() {
+    function IsSolved() {
       for (let i = 0; i < tiles.length - 1; i++) {
         if (puzzleContainer.children[i] !== originalTiles[i]) return false;
       }
       return true;
-    }
+    };
+
+    function Congratulate() {
+      var videoOverlay = document.getElementById("video-overlay");
+      var video = document.getElementById("overlay-video");
+      
+      // オーバーレイを表示
+      videoOverlay.style.display = "flex";
+      
+      // 7秒後に動画を再生
+      setTimeout(function() {                
+        video.play();   // 動画の再生
+      }, 7000);        
+    };
+
+    // 動画が終了したらフェードアウトアニメーションを適用して非表示にする
+    document.getElementById("overlay-video").addEventListener("ended", function() {
+      var videoOverlay = document.getElementById("video-overlay");
+
+      // フェードアウトのアニメーションを適用
+      videoOverlay.style.animation = "fadeOut 4s forwards";
+
+      // アニメーション終了後に非表示にする
+      videoOverlay.addEventListener("animationend", function() {
+        videoOverlay.style.display = "none"; // オーバーレイを非表示に
+      });
+    });
+
   </script>
 </body>
 </html>
