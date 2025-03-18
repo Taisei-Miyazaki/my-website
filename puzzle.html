@@ -5,128 +5,326 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>写真のスライドパズル</title>
   <style>
-  #puzzle-container {
-    width: 400px; /* パズル全体の幅 */
-    height: 400px; /* パズル全体の高さ */
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 3x3のグリッド */
-    grid-template-rows: repeat(4, 1fr);
-    gap: 1px; /* タイル間の隙間 */
-  }
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh; /* ビューポート全体の高さを確保 */
+      display: flex;
+      flex-direction: column;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      color: #333;
+    }
 
-  .tile {
-    background-size: 400px 400px; /* 画像全体のサイズを調整 */
-    background-repeat: no-repeat;
-    border: 1px solid #ccc;
-    cursor: pointer;
-  }
+    header {
+      background-color: #007BFF;
+      color: white;
+      padding: 20px 10px;
+      text-align: center;
+      position: relative;
+      transition: opacity 1s ease-in-out;
+    }
 
-  .empty {
-    background: none; /* 空のタイルを表現 */
-    border: none;
-  }
+    /* ハンバーガーメニューアイコン */
+    .menu-icon {
+      font-size: 30px;
+      cursor: pointer;
+      color: #2c3e50;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
 
-  /* 動画のスタイル */
-  #video-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgb(255, 253, 253); 
-    display: none; /* 初期状態では非表示 */
-    justify-content: center;
-    align-items: center;
-    z-index: 9998; /* 最前面に表示 */
-    opacity: 0; /* 初期状態では完全に透明 */
-    animation: fadeIn 6s forwards; /* フェードインアニメーションを適用 */
-  }
+    /* 左側のメニューバー */
+    .sidebar {
+      width: 0;
+      height: 100%;
+      background-color: #2c3e50; /* 落ち着いた青灰色 */
+      color: white;
+      position: fixed;
+      transition: width 0.3s ease;
+      padding-top: 20px;
+      overflow-x: hidden;
+    }
 
-  /* フェードインのアニメーション */
-  @keyframes fadeIn {
-      from {
-          opacity: 0;
-      }
-      to {
-          opacity: 1;
-      }
-  }
+    .sidebar a {
+      padding: 15px;
+      text-decoration: none;
+      color: white;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      display: block;
+      transition: background-color 0.3s;
+    }
 
-  /* フェードアウトのアニメーション */
-  @keyframes fadeOut {
-      from {
-          opacity: 1;
-      }
-      to {
-          opacity: 0;
-      }
-  }
+    .sidebar a:hover {
+      background-color: #34495e; /* メニュー項目のホバー時 */
+    }
 
-  video {
-      width: 80%;  /* 動画の横幅を80%に設定 */
-      max-width: 1200px; /* 最大横幅を1200pxに制限 */
-      border-radius: 10px; /* 角を丸くする */
-  }
+    .sidebar .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      font-size: 2.5rem;
+      color: white;
+      cursor: pointer;
+    }
 
-  .taco {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    background-image: url('img/tacos.png');
-    background-size: cover;
-    z-index: 9999; /* 最前面に表示 */
-  }
+    main {
+      padding: 20px;
+      text-align: center;
+      flex: 1;
+      justify-items: center;
+    }
+
+    footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 10px 0;
+      position: relative;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .tab-container {
+      display: flex;
+      justify-content: center;
+      margin: 20px;
+      border-bottom: 2px solid #ccc;
+    }
+
+    .tab {
+      padding: 10px 20px;
+      margin: 0 5px;
+      cursor: pointer;
+      color: #333;
+      text-transform: uppercase;
+      font-weight: bold;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .tab:hover {
+      color: #007BFF;
+      border-bottom: 2px solid #007BFF;
+    }
+
+    .tab.active {
+      color: white;
+      background-color: #007BFF;
+      border-bottom: 2px solid #007BFF;
+    }
+
+    .content {
+      display: none;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+
+    .content.active {
+      display: block;
+    }
+
+    #prin-chan-puzzle-container {
+      width: 400px; /* パズル全体の幅 */
+      height: 400px; /* パズル全体の高さ */
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* 3x3のグリッド */
+      grid-template-rows: repeat(4, 1fr);
+      gap: 1px; /* タイル間の隙間 */
+    }
+
+    #cheddar-chan-puzzle-container {
+      width: 400px; /* パズル全体の幅 */
+      height: 400px; /* パズル全体の高さ */
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* 3x3のグリッド */
+      grid-template-rows: repeat(4, 1fr);
+      gap: 1px; /* タイル間の隙間 */
+    }
+
+    .tile {
+      background-size: 400px 400px; /* 画像全体のサイズを調整 */
+      background-repeat: no-repeat;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+
+    .empty {
+      background: none; /* 空のタイルを表現 */
+      border: none;
+    }
+
+    /* 動画のスタイル */
+    #video-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgb(255, 253, 253); 
+      display: none; /* 初期状態では非表示 */
+      justify-content: center;
+      align-items: center;
+      z-index: 9998; /* 最前面に表示 */
+      opacity: 0; /* 初期状態では完全に透明 */
+      animation: fadeIn 6s forwards; /* フェードインアニメーションを適用 */
+    }
+
+    /* フェードインのアニメーション */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* フェードアウトのアニメーション */
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+        }
+        to {
+            opacity: 0;
+        }
+    }
+
+    video {
+        width: 80%;  /* 動画の横幅を80%に設定 */
+        max-width: 1200px; /* 最大横幅を1200pxに制限 */
+        border-radius: 10px; /* 角を丸くする */
+    }
+
+    .taco {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background-image: url('img/tacos.png');
+      background-size: cover;
+      z-index: 9999; /* 最前面に表示 */
+    }
 
   </style>
 </head>
 <body>
-  <h1>写真のスライドパズル</h1>
-  <div id="puzzle-container"></div>
-    <div id="video-overlay">
-      <video id="overlay-video" autoplay>
-        <source src="movie/princhan_singing.mp4" type="video/mp4">
-        お使いのブラウザは動画をサポートしていません。
-      </video>
-  </div>
+    <!-- ヘッダー -->
+    <header id="header">
+      <h1>Taisei's Web Site</h1>
+    </header>
+
+    <!-- ハンバーガーメニューアイコン -->
+    <span class="menu-icon" onclick="toggleMenu()">☰</span>
+
+    <!-- 左側のメニューバー -->
+    <div class="sidebar">
+      <a href="index.html" class="menu-item">🏠ホーム</a>
+      <!-- <a href="#" class="menu-item">📄ドキュメント</a> -->
+      <a href="puzzle.html" class="menu-item">🎮Game</a>
+      <a href="#" class="menu-item">📞お問い合わせ</a>
+      <a href="#" class="menu-item">⚙️設定</a>
+      <span class="close-btn" onclick="toggleMenu()">×</span>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <div class="tab-container">
+      <div class="tab active" onclick="openTab('prin-chan')">Prin Chan</div>
+      <div class="tab" onclick="openTab('cheddar-chan')">Cheddar Chan</div>
+    </div>
+  
+    <main>
+      <div id="prin-chan" class="content active">
+        <div id="prin-chan-puzzle-container"></div>
+        <div id="video-overlay">
+          <video id="overlay-video" autoplay>
+            <source src="movie/princhan_singing.mp4" type="video/mp4">
+            お使いのブラウザは動画をサポートしていません。
+          </video>
+        </div>
+      </div>
+      <div id="cheddar-chan" class="content">
+        <div id="cheddar-chan-puzzle-container"></div>
+      </div>
+    </main>
   <audio id="click-sound" src="sound/click_sound.mp3" preload="auto"></audio>
-  <!-- <footer>
+  
+  <footer>
     <p>&copy; Created by Taisei in 2025.</p>
-  </footer> -->
+  </footer>
+
   <script>
-    const imageSrc = 'img/cheddarchanpazzle.jpg'; // 使用する画像のパス
-    const gridSize = 4; // 3x3パズル
-    const puzzleContainer = document.getElementById('puzzle-container');
-    const originalTiles = [];
-
-    // タイルを作成
-    let tiles = [];
-    for (let row = 0; row < gridSize; row++) {
-      for (let col = 0; col < gridSize; col++) {
-        const tile = document.createElement('div');
-        tile.classList.add('tile');
-        
-        // 空のタイルを設定
-        if (row === gridSize - 1 && col === gridSize - 1) {
-          tile.classList.add('empty');
-        } else {
-          // 背景画像の位置を計算
-          tile.style.backgroundImage = `url(${imageSrc})`;
-          tile.style.backgroundPosition = `-${col * 100}px -${row * 100}px`;
-        }
-
-        tiles.push(tile);
-        originalTiles.push(tile);
-        puzzleContainer.appendChild(tile);
+    // メニューバーのトグル
+    function toggleMenu() {
+      var sidebar = document.querySelector('.sidebar');
+      var mainContent = document.querySelector('.main-content');
+      if (sidebar.style.width === '250px') {
+          sidebar.style.width = '0';
+          mainContent.style.marginLeft = '0';
+      } else {
+          sidebar.style.width = '250px';
+          mainContent.style.marginLeft = '250px';
       }
     }
-    shuffleTiles()
 
-    function shuffleTiles() {
+    function openTab(tabId) {
+      // すべてのタブとコンテンツを非アクティブに
+      const tabs = document.querySelectorAll('.tab');
+      const contents = document.querySelectorAll('.content');
+      tabs.forEach(tab => tab.classList.remove('active'));
+      contents.forEach(content => content.classList.remove('active'));
+
+      // クリックされたタブと対応するコンテンツをアクティブに
+      document.querySelector(`[onclick="openTab('${tabId}')"]`).classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    const prinChanImageSrc = 'img/princhan_puzzle.jpg';
+    const cheddarChanImageSrc = 'img/cheddarchan_puzzle.jpg';
+    const gridSize = 4; // 3x3パズル
+    const prinChanPuzzleContainer = document.getElementById('prin-chan-puzzle-container');
+    const cheddarChanPuzzleContainer = document.getElementById('cheddar-chan-puzzle-container');
+    const prinChanOriginalTiles = [];
+    const cheddarChanOriginalTiles = [];
+
+    var prinChanTiles = createTiles(prinChanImageSrc,prinChanPuzzleContainer,prinChanOriginalTiles);
+    var cheddarChanTiles = createTiles(cheddarChanImageSrc,cheddarChanPuzzleContainer,cheddarChanOriginalTiles);
+    shuffleTiles(prinChanTiles,prinChanPuzzleContainer);
+    // shuffleTiles(cheddarChanTiles,cheddarChanPuzzleContainer);
+
+    // タイルを作成
+    function createTiles(imageSrc,puzzleContainer,originalTiles) {
+      var tiles = [];
+      for (let row = 0; row < gridSize; row++) {
+        for (let col = 0; col < gridSize; col++) {
+          const tile = document.createElement('div');
+          tile.classList.add('tile');
+          
+          // 空のタイルを設定
+          if (row === gridSize - 1 && col === gridSize - 1) {
+            tile.classList.add('empty');
+          } else {
+            // 背景画像の位置を計算
+            tile.style.backgroundImage = `url(${imageSrc})`;
+            tile.style.backgroundPosition = `-${col * 100}px -${row * 100}px`;
+          }
+
+          tiles.push(tile);
+            originalTiles.push(tile);
+            puzzleContainer.appendChild(tile);
+        }
+      }
+      return tiles
+    }
+
+    function shuffleTiles(tiles,puzzleContainer) {
       const moves = [
         [0, 1], [0, -1], [1, 0], [-1, 0] // 上下左右
       ];
 
-      for (let i = 0; i < 1; i++) { // 100回ランダムに動かす
+      for (let i = 0; i < 200; i++) { // 200回ランダムに動かす
         const emptyTile = document.querySelector('.empty');
         const emptyIndex = tiles.indexOf(emptyTile);
         const [emptyRow, emptyCol] = [Math.floor(emptyIndex / gridSize), emptyIndex % gridSize];
@@ -144,31 +342,31 @@
       tiles.forEach(tile => puzzleContainer.appendChild(tile));
     }
 
-    puzzleContainer.addEventListener('click', (e) => {
+    prinChanPuzzleContainer.addEventListener('click', (e) => {
       const clickedTile = e.target;
       if (!clickedTile.classList.contains('tile') || clickedTile.classList.contains('empty')) return;
 
       const emptyTile = document.querySelector('.empty');
-      const clickedIndex = tiles.indexOf(clickedTile);
-      const emptyIndex = tiles.indexOf(emptyTile);
+      const clickedIndex = prinChanTiles.indexOf(clickedTile);
+      const emptyIndex = prinChanTiles.indexOf(emptyTile);
       const [clickedRow, clickedCol] = [Math.floor(clickedIndex / gridSize), clickedIndex % gridSize];
       const [emptyRow, emptyCol] = [Math.floor(emptyIndex / gridSize), emptyIndex % gridSize];
 
       if (Math.abs(clickedRow - emptyRow) + Math.abs(clickedCol - emptyCol) === 1) {
         // 入れ替え
-        [tiles[clickedIndex], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[clickedIndex]];
-        tiles.forEach(tile => puzzleContainer.appendChild(tile));
+        [prinChanTiles[clickedIndex], prinChanTiles[emptyIndex]] = [prinChanTiles[emptyIndex], prinChanTiles[clickedIndex]];
+        prinChanTiles.forEach(tile => prinChanPuzzleContainer.appendChild(tile));
       }
-      if (isSolved()) {
+      if (isSolved(prinChanTiles,prinChanPuzzleContainer,prinChanOriginalTiles)) {
         congratulate();
       }
       var audio = document.getElementById("click-sound");
-            audio.play().catch(function(error) {
-                alert('音楽の再生に失敗しました:', error);
-            });
+        audio.play().catch(function(error) {
+          alert('音楽の再生に失敗しました:', error);
+        });
     });
 
-    function isSolved() {
+    function isSolved(tiles,puzzleContainer,originalTiles) {
       for (let i = 0; i < tiles.length - 1; i++) {
         if (puzzleContainer.children[i] !== originalTiles[i]) return false;
       }
@@ -180,7 +378,7 @@
       var video = document.getElementById("overlay-video");
       
       // フェードアウトのアニメーションを適用
-      videoOverlay.style.animation = "fadeIn 4s forwards";
+      videoOverlay.style.animation = "fadeIn 6s forwards";
 
       // オーバーレイを表示
       videoOverlay.style.display = "flex";
