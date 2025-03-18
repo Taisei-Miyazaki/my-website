@@ -7,7 +7,7 @@
   <style>
   #puzzle-container {
     width: 400px; /* パズル全体の幅 */
-    height: 300px; /* パズル全体の高さ */
+    height: 400px; /* パズル全体の高さ */
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* 3x3のグリッド */
     grid-template-rows: repeat(4, 1fr);
@@ -37,7 +37,7 @@
     display: none; /* 初期状態では非表示 */
     justify-content: center;
     align-items: center;
-    z-index: 9999; /* 最前面に表示 */
+    z-index: 9998; /* 最前面に表示 */
     opacity: 0; /* 初期状態では完全に透明 */
     animation: fadeIn 6s forwards; /* フェードインアニメーションを適用 */
   }
@@ -68,6 +68,15 @@
       border-radius: 10px; /* 角を丸くする */
   }
 
+  .taco {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-image: url('img/tacos.png');
+    background-size: cover;
+    z-index: 9999; /* 最前面に表示 */
+  }
+
   </style>
 </head>
 <body>
@@ -75,16 +84,16 @@
   <div id="puzzle-container"></div>
     <div id="video-overlay">
       <video id="overlay-video" autoplay>
-        <source src="/movie/princhan_singing.mp4" type="video/mp4">
+        <source src="movie/princhan_singing.mp4" type="video/mp4">
         お使いのブラウザは動画をサポートしていません。
       </video>
   </div>
-  <audio id="click-sound" src="/sound/click_sound.mp3" preload="auto"></audio>
-  <footer>
+  <audio id="click-sound" src="sound/click_sound.mp3" preload="auto"></audio>
+  <!-- <footer>
     <p>&copy; Created by Taisei in 2025.</p>
-  </footer>
+  </footer> -->
   <script>
-    const imageSrc = '/img/cheddarchanpazzle.jpg'; // 使用する画像のパス
+    const imageSrc = 'img/cheddarchanpazzle.jpg'; // 使用する画像のパス
     const gridSize = 4; // 3x3パズル
     const puzzleContainer = document.getElementById('puzzle-container');
     const originalTiles = [];
@@ -117,7 +126,7 @@
         [0, 1], [0, -1], [1, 0], [-1, 0] // 上下左右
       ];
 
-      for (let i = 0; i < 100; i++) { // 100回ランダムに動かす
+      for (let i = 0; i < 1; i++) { // 100回ランダムに動かす
         const emptyTile = document.querySelector('.empty');
         const emptyIndex = tiles.indexOf(emptyTile);
         const [emptyRow, emptyCol] = [Math.floor(emptyIndex / gridSize), emptyIndex % gridSize];
@@ -150,8 +159,8 @@
         [tiles[clickedIndex], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[clickedIndex]];
         tiles.forEach(tile => puzzleContainer.appendChild(tile));
       }
-      if (IsSolved()) {
-        Congratulate();
+      if (isSolved()) {
+        congratulate();
       }
       var audio = document.getElementById("click-sound");
             audio.play().catch(function(error) {
@@ -159,24 +168,32 @@
             });
     });
 
-    function IsSolved() {
+    function isSolved() {
       for (let i = 0; i < tiles.length - 1; i++) {
         if (puzzleContainer.children[i] !== originalTiles[i]) return false;
       }
       return true;
     };
 
-    function Congratulate() {
+    function congratulate() {
       var videoOverlay = document.getElementById("video-overlay");
       var video = document.getElementById("overlay-video");
       
+      // フェードアウトのアニメーションを適用
+      videoOverlay.style.animation = "fadeIn 4s forwards";
+
       // オーバーレイを表示
       videoOverlay.style.display = "flex";
       
       // 7秒後に動画を再生
       setTimeout(function() {                
         video.play();   // 動画の再生
-      }, 7000);        
+      }, 7000);      
+      
+      // 23秒後に動画を再生
+      setTimeout(function() {                
+        IntervalId = setInterval(createTaco, 300);
+      }, 23000);         
     };
 
     // 動画が終了したらフェードアウトアニメーションを適用して非表示にする
@@ -190,8 +207,33 @@
       videoOverlay.addEventListener("animationend", function() {
         videoOverlay.style.display = "none"; // オーバーレイを非表示に
       });
+
+      clearInterval(IntervalId); // タコス生成を停止
     });
 
+    let IntervalId;
+
+    function createTaco() {
+      const taco = document.createElement('div');
+      taco.className = 'taco';  
+      let xPos;
+      const centralStart = (window.innerWidth / 4); // 中央開始位置
+      const centralEnd = (window.innerWidth * 2 / 3);   // 中央終了位置
+      do {
+        xPos = Math.random() * window.innerWidth;
+      } while (xPos > centralStart && xPos < centralEnd);
+      taco.style.left = xPos + 'px';
+      taco.style.top = '-50px';
+      document.body.appendChild(taco);
+
+      let fallInterval = setInterval(() => {
+        taco.style.top = (parseFloat(taco.style.top) + 5) + 'px';
+        if (parseFloat(taco.style.top) > window.innerHeight) {
+          clearInterval(fallInterval);
+          document.body.removeChild(taco);
+        }
+      }, 50);
+    }
   </script>
 </body>
 </html>
