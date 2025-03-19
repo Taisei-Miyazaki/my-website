@@ -165,11 +165,11 @@
       width: 100vw;
       height: 100vh;
       background-color: rgb(255, 253, 253); 
+      display: none; /* 初期状態では非表示 */
       justify-content: center;
       align-items: center;
       z-index: 9998; /* 最前面に表示 */
       opacity: 0; /* 初期状態では完全に透明 */
-      visibility: hidden; /* 初期状態では非表示 */
       animation: fadeIn 6s forwards; /* フェードインアニメーションを適用 */
     }
 
@@ -180,7 +180,7 @@
         }
         to {
             opacity: 1;
-            visibility: visible;
+            display: flex;
         }
     }
 
@@ -191,7 +191,6 @@
         }
         to {
             opacity: 0;
-            visibility: hidden;
         }
     }
 
@@ -241,7 +240,7 @@
       <div id="prin-chan" class="content active">
         <div id="prin-chan-puzzle-container"></div>
         <div id="video-overlay">
-          <video id="overlay-video">
+          <video id="overlay-video" autoplay>
             <source src="movie/princhan_singing.mp4" type="video/mp4">
             お使いのブラウザは動画をサポートしていません。
           </video>
@@ -326,7 +325,7 @@
         [0, 1], [0, -1], [1, 0], [-1, 0] // 上下左右
       ];
 
-      for (let i = 0; i < 2; i++) { // 200回ランダムに動かす
+      for (let i = 0; i < 200; i++) { // 200回ランダムに動かす
         const emptyTile = document.querySelector('.empty');
         const emptyIndex = tiles.indexOf(emptyTile);
         const [emptyRow, emptyCol] = [Math.floor(emptyIndex / gridSize), emptyIndex % gridSize];
@@ -383,7 +382,7 @@
       videoOverlay.style.animation = "fadeIn 6s forwards";
 
       // オーバーレイを表示
-      videoOverlay.style.visibility = "visible";
+      videoOverlay.style.display = "flex";
       
       // 7秒後に動画を再生
       setTimeout(function() {                
@@ -405,7 +404,7 @@
 
       // アニメーション終了後に非表示にする
       videoOverlay.addEventListener("animationend", function() {
-        videoOverlay.style.visibility = "hidden"; // オーバーレイを非表示に
+        videoOverlay.style.display = "none"; // オーバーレイを非表示に
       });
 
       clearInterval(IntervalId); // タコス生成を停止
