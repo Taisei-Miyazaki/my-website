@@ -127,7 +127,16 @@
       display: block;
     }
 
-    #prin-chan-puzzle-container {
+    #prin-chan-puzzle-container1 {
+      width: 400px; /* パズル全体の幅 */
+      height: 400px; /* パズル全体の高さ */
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* 3x3のグリッド */
+      grid-template-rows: repeat(4, 1fr);
+      gap: 1px; /* タイル間の隙間 */
+    }
+
+    #prin-chan-puzzle-container2 {
       width: 400px; /* パズル全体の幅 */
       height: 400px; /* パズル全体の高さ */
       display: grid;
@@ -158,7 +167,7 @@
     }
 
     /* 動画のスタイル */
-    #video-overlay {
+    .video-overlay {
       position: fixed;
       top: 0;
       left: 0;
@@ -180,6 +189,7 @@
         }
         to {
             opacity: 1;
+            display: flex;
         }
     }
 
@@ -208,6 +218,15 @@
       z-index: 9999; /* 最前面に表示 */
     }
 
+    .heart {
+      position: absolute;
+      width: 60px;
+      height: 50px;
+      background-image: url('img/heart.png');
+      background-size: cover;
+      z-index: 9999; /* 最前面に表示 */
+    }
+
   </style>
 </head>
 <body>
@@ -231,16 +250,26 @@
 
     <!-- メインコンテンツ -->
     <div class="tab-container">
-      <div class="tab active" onclick="openTab('prin-chan')">Prin Chan</div>
+      <div class="tab active" onclick="openTab('prin-chan1')">Prin Chan</div>
+      <div class="tab" onclick="openTab('prin-chan2')">Prin Chan</div>
       <div class="tab" onclick="openTab('cheddar-chan')">Cheddar Chan</div>
     </div>
   
     <main>
-      <div id="prin-chan" class="content active">
-        <div id="prin-chan-puzzle-container"></div>
-        <div id="video-overlay">
-          <video id="overlay-video" autoplay>
-            <source src="movie/princhan_singing.mp4" type="video/mp4">
+      <div id="prin-chan1" class="content active">
+        <div id="prin-chan-puzzle-container1"></div>
+        <div class="video-overlay">
+          <video class="overlay-video" autoplay>
+            <source src="movie/princhan_singing_kawaii.mp4" type="video/mp4">
+            お使いのブラウザは動画をサポートしていません。
+          </video>
+        </div>
+      </div>
+      <div id="prin-chan2" class="content">
+        <div id="prin-chan-puzzle-container2"></div>
+        <div class="video-overlay">
+          <video class="overlay-video" autoplay>
+            <source src="movie/princhan_singing_mommy.mp4" type="video/mp4">
             お使いのブラウザは動画をサポートしていません。
           </video>
         </div>
@@ -281,18 +310,23 @@
       document.getElementById(tabId).classList.add('active');
     }
 
-    const prinChanImageSrc = 'img/princhan_puzzle.jpg';
+    const prinChanImageSrc1 = 'img/princhan_puzzle1.jpg';
+    const prinChanImageSrc2 = 'img/princhan_puzzle2.jpg';
     const cheddarChanImageSrc = 'img/cheddarchan_puzzle.jpg';
-    const gridSize = 4; // 3x3パズル
-    const prinChanPuzzleContainer = document.getElementById('prin-chan-puzzle-container');
+    const prinChanPuzzleContainer1 = document.getElementById('prin-chan-puzzle-container1');
+    const prinChanPuzzleContainer2 = document.getElementById('prin-chan-puzzle-container2');
     const cheddarChanPuzzleContainer = document.getElementById('cheddar-chan-puzzle-container');
-    const prinChanOriginalTiles = [];
+    const gridSize = 4; // 3x3パズル
+    const prinChanOriginalTiles1 = [];
+    const prinChanOriginalTiles2 = [];
     const cheddarChanOriginalTiles = [];
 
-    var prinChanTiles = createTiles(prinChanImageSrc,prinChanPuzzleContainer,prinChanOriginalTiles);
+    var prinChanTiles1 = createTiles(prinChanImageSrc1,prinChanPuzzleContainer1,prinChanOriginalTiles1);
+    var prinChanTiles2 = createTiles(prinChanImageSrc2,prinChanPuzzleContainer2,prinChanOriginalTiles2);
     var cheddarChanTiles = createTiles(cheddarChanImageSrc,cheddarChanPuzzleContainer,cheddarChanOriginalTiles);
-    shuffleTiles(prinChanTiles,prinChanPuzzleContainer);
-    // shuffleTiles(cheddarChanTiles,cheddarChanPuzzleContainer);
+    shuffleTiles(prinChanTiles1,prinChanPuzzleContainer1);
+    shuffleTiles(prinChanTiles2,prinChanPuzzleContainer2);
+    shuffleTiles(cheddarChanTiles,cheddarChanPuzzleContainer);
 
     // タイルを作成
     function createTiles(imageSrc,puzzleContainer,originalTiles) {
@@ -325,7 +359,7 @@
       ];
 
       for (let i = 0; i < 200; i++) { // 200回ランダムに動かす
-        const emptyTile = document.querySelector('.empty');
+        const emptyTile = puzzleContainer.querySelector('.empty');
         const emptyIndex = tiles.indexOf(emptyTile);
         const [emptyRow, emptyCol] = [Math.floor(emptyIndex / gridSize), emptyIndex % gridSize];
 
@@ -342,29 +376,44 @@
       tiles.forEach(tile => puzzleContainer.appendChild(tile));
     }
 
-    prinChanPuzzleContainer.addEventListener('click', (e) => {
+    prinChanPuzzleContainer1.addEventListener('click', (e) => {
       const clickedTile = e.target;
       if (!clickedTile.classList.contains('tile') || clickedTile.classList.contains('empty')) return;
+      movePuzzle(clickedTile,prinChanTiles1,prinChanPuzzleContainer1,prinChanOriginalTiles1)
+    });
 
-      const emptyTile = document.querySelector('.empty');
-      const clickedIndex = prinChanTiles.indexOf(clickedTile);
-      const emptyIndex = prinChanTiles.indexOf(emptyTile);
+    prinChanPuzzleContainer2.addEventListener('click', (e) => {
+      const clickedTile = e.target;
+      if (!clickedTile.classList.contains('tile') || clickedTile.classList.contains('empty')) return;
+      movePuzzle(clickedTile,prinChanTiles2,prinChanPuzzleContainer2,prinChanOriginalTiles2)
+    });
+
+    cheddarChanPuzzleContainer.addEventListener('click', (e) => {
+      const clickedTile = e.target;
+      if (!clickedTile.classList.contains('tile') || clickedTile.classList.contains('empty')) return;
+      movePuzzle(clickedTile,cheddarChanTiles,cheddarChanPuzzleContainer,cheddarChanOriginalTiles)
+    });
+
+    function movePuzzle(clickedTile,tiles,puzzleContainer,originalTiles) {
+      const emptyTile = puzzleContainer.querySelector('.empty');
+      const clickedIndex = tiles.indexOf(clickedTile);
+      const emptyIndex = tiles.indexOf(emptyTile);
       const [clickedRow, clickedCol] = [Math.floor(clickedIndex / gridSize), clickedIndex % gridSize];
       const [emptyRow, emptyCol] = [Math.floor(emptyIndex / gridSize), emptyIndex % gridSize];
 
       if (Math.abs(clickedRow - emptyRow) + Math.abs(clickedCol - emptyCol) === 1) {
         // 入れ替え
-        [prinChanTiles[clickedIndex], prinChanTiles[emptyIndex]] = [prinChanTiles[emptyIndex], prinChanTiles[clickedIndex]];
-        prinChanTiles.forEach(tile => prinChanPuzzleContainer.appendChild(tile));
+        [tiles[clickedIndex], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[clickedIndex]];
+        tiles.forEach(tile => puzzleContainer.appendChild(tile));
       }
-      if (isSolved(prinChanTiles,prinChanPuzzleContainer,prinChanOriginalTiles)) {
-        congratulate();
+      if (isSolved(tiles,puzzleContainer,originalTiles)) {
+        congratulate(puzzleContainer);
       }
       var audio = document.getElementById("click-sound");
         audio.play().catch(function(error) {
           alert('音楽の再生に失敗しました:', error);
         });
-    });
+    };
 
     function isSolved(tiles,puzzleContainer,originalTiles) {
       for (let i = 0; i < tiles.length - 1; i++) {
@@ -373,9 +422,9 @@
       return true;
     };
 
-    function congratulate() {
-      var videoOverlay = document.getElementById("video-overlay");
-      var video = document.getElementById("overlay-video");
+    function congratulate(puzzleContainer) {
+      var videoOverlay = puzzleContainer.nextElementSibling;
+      var video = videoOverlay.firstElementChild;
       
       // フェードアウトのアニメーションを適用
       videoOverlay.style.animation = "fadeIn 6s forwards";
@@ -389,34 +438,45 @@
       }, 7000);      
       
       // 23秒後に動画を再生
-      setTimeout(function() {                
-        IntervalId = setInterval(createTaco, 300);
+      setTimeout(function() {         
+        if (puzzleContainer.id === 'prin-chan-puzzle-container1') {
+          IntervalId = setInterval(() => {
+            createRain('taco')
+          }, 300);
+        }else if (puzzleContainer.id === 'prin-chan-puzzle-container2') {
+          IntervalId = setInterval(() => {
+            createRain('heart')
+          }, 300);
+        }       
       }, 23000);         
     };
-
+    
     // 動画が終了したらフェードアウトアニメーションを適用して非表示にする
-    document.getElementById("overlay-video").addEventListener("ended", function() {
-      var videoOverlay = document.getElementById("video-overlay");
+    const overlayVideos = document.querySelectorAll('.overlay-video');
+    overlayVideos.forEach(overlayVideo => {
+      overlayVideo.addEventListener("ended", function() {
+        var videoOverlay = overlayVideo.parentElement;
 
-      // フェードアウトのアニメーションを適用
-      videoOverlay.style.animation = "fadeOut 4s forwards";
+        // フェードアウトのアニメーションを適用
+        videoOverlay.style.animation = "fadeOut 4s forwards";
 
-      // アニメーション終了後に非表示にする
-      videoOverlay.addEventListener("animationend", function() {
-        videoOverlay.style.display = "none"; // オーバーレイを非表示に
+        // アニメーション終了後に非表示にする
+        videoOverlay.addEventListener("animationend", function() {
+          videoOverlay.style.display = "none"; // オーバーレイを非表示に
+        });
+
+        clearInterval(IntervalId); // 生成を停止
       });
-
-      clearInterval(IntervalId); // タコス生成を停止
-    });
+    })
 
     let IntervalId;
 
-    function createTaco() {
+    function createRain(className) {
       const taco = document.createElement('div');
-      taco.className = 'taco';  
+      taco.className = className;  
       let xPos;
       const centralStart = (window.innerWidth / 4); // 中央開始位置
-      const centralEnd = (window.innerWidth * 2 / 3);   // 中央終了位置
+      const centralEnd = (window.innerWidth * 3 / 4);   // 中央終了位置
       do {
         xPos = Math.random() * window.innerWidth;
       } while (xPos > centralStart && xPos < centralEnd);
