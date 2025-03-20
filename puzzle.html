@@ -250,8 +250,8 @@
 
     <!-- メインコンテンツ -->
     <div class="tab-container">
-      <div class="tab active" onclick="openTab('prin-chan1')">Prin Chan</div>
-      <div class="tab" onclick="openTab('prin-chan2')">Prin Chan</div>
+      <div class="tab active" onclick="openTab('prin-chan1')">Prin Chan 1</div>
+      <div class="tab" onclick="openTab('prin-chan2')">Prin Chan 2</div>
       <div class="tab" onclick="openTab('cheddar-chan')">Cheddar Chan</div>
     </div>
   
@@ -358,7 +358,7 @@
         [0, 1], [0, -1], [1, 0], [-1, 0] // 上下左右
       ];
 
-      for (let i = 0; i < 200; i++) { // 200回ランダムに動かす
+      for (let i = 0; i < 50; i++) { // 200回ランダムに動かす
         const emptyTile = puzzleContainer.querySelector('.empty');
         const emptyIndex = tiles.indexOf(emptyTile);
         const [emptyRow, emptyCol] = [Math.floor(emptyIndex / gridSize), emptyIndex % gridSize];
@@ -438,17 +438,19 @@
       }, 7000);      
       
       // 23秒後に動画を再生
-      setTimeout(function() {         
-        if (puzzleContainer.id === 'prin-chan-puzzle-container1') {
+      if (puzzleContainer.id === 'prin-chan-puzzle-container1') {
+        setTimeout(() => {         
           IntervalId = setInterval(() => {
             createRain('taco')
           }, 300);
-        }else if (puzzleContainer.id === 'prin-chan-puzzle-container2') {
+        }, 23000);         
+      }else if (puzzleContainer.id === 'prin-chan-puzzle-container2') {
+        setTimeout(() => {
           IntervalId = setInterval(() => {
             createRain('heart')
           }, 300);
-        }       
-      }, 23000);         
+        }, 19000);
+      }       
     };
     
     // 動画が終了したらフェードアウトアニメーションを適用して非表示にする
