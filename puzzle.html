@@ -358,7 +358,7 @@
         [0, 1], [0, -1], [1, 0], [-1, 0] // 上下左右
       ];
 
-      for (let i = 0; i < 50; i++) { // 200回ランダムに動かす
+      for (let i = 0; i < 5; i++) { // 200回ランダムに動かす
         const emptyTile = puzzleContainer.querySelector('.empty');
         const emptyIndex = tiles.indexOf(emptyTile);
         const [emptyRow, emptyCol] = [Math.floor(emptyIndex / gridSize), emptyIndex % gridSize];
